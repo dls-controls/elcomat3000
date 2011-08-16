@@ -1,0 +1,22 @@
+#RELEASE Location of external products
+# Run "gnumake clean uninstall install" in the application
+# top directory each time this file is changed.
+#
+# NOTE: The build does not check dependancies on files
+# external to this application. Thus you should run
+# "gnumake clean uninstall install" in the top directory
+# each time EPICS_BASE, SNCSEQ, or any other external
+# module defined in the RELEASE file is rebuilt.
+
+TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
+SUPPORT=/dls_sw/prod/R3.14.11/support
+WORK=/dls_sw/work/R3.14.11/support
+LOCAL=/home/fgz73762/local/R3.14.11/support
+
+ELCOMAT3000=    $(WORK)/elcomat3000
+ASYN=           $(SUPPORT)/asyn/4-14
+
+# EPICS_BASE usually appears last so other apps can override stuff:
+EPICS_BASE=/dls_sw/epics/R3.14.11/base
+
+-include $(TOP)/configure/RELEASE.private

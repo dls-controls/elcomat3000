@@ -1,0 +1,12 @@
+file elcomat3000.template
+{
+pattern {       P,  R,      PORT, ADDR, TIMEOUT  }
+{   "ELCOMAT3000", "", "elcomat",    0,       5 }
+}
+
+file asynRecord.db
+{
+pattern {       P,       R, PORT, ADDR, IMAX, OMAX}
+{   "ELCOMAT3000", ":ASYN",   "",   "", 1024, 1024}
+}
+
