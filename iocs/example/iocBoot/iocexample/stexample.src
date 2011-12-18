@@ -16,14 +16,23 @@ epicsEnvSet("STREAM_PROTOCOL_PATH", "")
 #####################
 # The serial port for the elcomat3000
 #####################
-drvAsynIPPortConfigure("elcomatport", "172.23.82.2:7009", 100, 0, 0)
-#drvAsynSerialPortConfigure("elcomatport", "/dev/ttyS0", 0, 0, 0)
-#asynSetOption("elcomatport", -1, "baud", "19200")
-#asynSetOption("elcomatport", -1, "bits", "8")
-#asynSetOption("elcomatport", -1, "parity", "none")
-#asynSetOption("elcomatport", -1, "stop", "1")
-#asynSetOption("elcomatport", -1, "clocal", "Y")
-#asynSetOption("elcomatport", -1, "crtscts", "N")
+
+# Terminal server on beamline 
+#drvAsynIPPortConfigure("elcomatport", "172.23.82.2:7009", 100, 0, 0)
+
+# Console port on PC
+drvAsynSerialPortConfigure("elcomatport", "/dev/ttyS0", 0, 0, 0)
+asynSetOption("elcomatport", -1, "baud", "19200")
+asynSetOption("elcomatport", -1, "bits", "8")
+asynSetOption("elcomatport", -1, "parity", "none")
+asynSetOption("elcomatport", -1, "stop", "1")
+asynSetOption("elcomatport", -1, "clocal", "Y")
+asynSetOption("elcomatport", -1, "crtscts", "N")
+
+# Simulation
+#drvAsynIPPortConfigure("elcomatport", "localhost:9015", 100, 0, 0)
+
+# Configuration
 asynOctetSetInputEos("elcomatport",0,"\n")
 elcomat3000Config("elcomat", "elcomatport", 0)
 
@@ -34,6 +43,4 @@ dbLoadRecords("db/example.db")
 
 iocInit()
 
-#asynSetTraceIOMask( "psu", 0, 0xFF )
-#asynSetTraceMask(   "psu", -1, 0x19 )
 

@@ -1,0 +1,201 @@
+# elcomat3000.template
+# 
+#
+# Parameters:
+#   P       - EPICS name prefix
+#   R       - EPICS name suffix
+#   PORT    - Asyn port
+#   TIMEOUT - Timeout
+#   ADDR    - Address
+
+record(longout, "$(P)$(R):AVERAGESIZE")
+{
+    field(SCAN, "Passive")
+    field(DTYP, "asynInt32")
+    field(VAL,  "0")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))AVERAGESIZE")
+    field(PINI, "1")
+}
+
+record(ai, "$(P)$(R):XVALUE")
+{
+    field(SCAN, "I/O Intr")
+    field(DTYP, "asynFloat64")
+    field(VAL,  "0")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))XVALUE")
+    field(PINI, "1")
+    field(PREC, "3")
+}
+
+record(ai, "$(P)$(R):XSTDDEV")
+{
+    field(SCAN, "I/O Intr")
+    field(DTYP, "asynFloat64")
+    field(VAL,  "0")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSTDDEV")
+    field(PINI, "1")
+    field(PREC, "3")
+}
+
+record(ao, "$(P)$(R):SAMPLEPERIOD")
+{
+    field(SCAN, "Passive")
+    field(DTYP, "asynFloat64")
+    field(VAL,  "0")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))SAMPLEPERIOD")
+    field(PINI, "1")
+    field(PREC, "3")
+}
+
+record(ai, "$(P)$(R):YVALUE")
+{
+    field(SCAN, "I/O Intr")
+    field(DTYP, "asynFloat64")
+    field(VAL,  "0")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))YVALUE")
+    field(PINI, "1")
+    field(PREC, "3")
+}
+
+record(ai, "$(P)$(R):YSTDDEV")
+{
+    field(SCAN, "I/O Intr")
+    field(DTYP, "asynFloat64")
+    field(VAL,  "0")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))YSTDDEV")
+    field(PINI, "1")
+    field(PREC, "3")
+}
+
+record(bi, "$(P)$(R):CONNECTED")
+{
+    field(SCAN, "I/O Intr")
+    field(DTYP, "asynInt32")
+    field(VAL,  "0")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))CONNECTED")
+    field(ZNAM, "Not connected")
+    field(ONAM, "Connected")
+}
+
+record(bi, "$(P)$(R):RUNNING")
+{
+    field(SCAN, "I/O Intr")
+    field(DTYP, "asynInt32")
+    field(VAL,  "0")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))RUNNING")
+    field(ZNAM, "Stopped")
+    field(ONAM, "Running")
+}
+
+record(bo, "$(P)$(R):GO")
+{
+    field(SCAN, "Passive")
+    field(DTYP, "asynInt32")
+    field(VAL,  "0")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))GO")
+    field(ZNAM, "")
+    field(ONAM, "Go")
+}
+
+record(bo, "$(P)$(R):STOP")
+{
+    field(SCAN, "Passive")
+    field(DTYP, "asynInt32")
+    field(VAL,  "0")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))STOP")
+    field(ZNAM, "")
+    field(ONAM, "Stop")
+}
+
+record(longin, "$(P)$(R):SERIALNUMBER")
+{
+    field(SCAN, "I/O Intr")
+    field(DTYP, "asynInt32")
+    field(VAL,  "0")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))SERIALNUMBER")
+    field(PINI, "1")
+}
+
+record(longin, "$(P)$(R):DAY")
+{
+    field(SCAN, "I/O Intr")
+    field(DTYP, "asynInt32")
+    field(VAL,  "0")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))DAY")
+    field(PINI, "1")
+}
+
+record(longin, "$(P)$(R):MONTH")
+{
+    field(SCAN, "I/O Intr")
+    field(DTYP, "asynInt32")
+    field(VAL,  "0")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))MONTH")
+    field(PINI, "1")
+}
+
+record(longin, "$(P)$(R):YEAR")
+{
+    field(SCAN, "I/O Intr")
+    field(DTYP, "asynInt32")
+    field(VAL,  "0")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))YEAR")
+    field(PINI, "1")
+}
+
+record(longin, "$(P)$(R):FOCALLENGTH")
+{
+    field(SCAN, "I/O Intr")
+    field(DTYP, "asynInt32")
+    field(VAL,  "0")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))FOCALLENGTH")
+    field(PINI, "1")
+}
+
+record(longin, "$(P)$(R):XSAMPLES")
+{
+    field(SCAN, "I/O Intr")
+    field(DTYP, "asynInt32")
+    field(VAL,  "0")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))XSAMPLES")
+    field(PINI, "1")
+}
+
+record(longin, "$(P)$(R):YSAMPLES")
+{
+    field(SCAN, "I/O Intr")
+    field(DTYP, "asynInt32")
+    field(VAL,  "0")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))YSAMPLES")
+    field(PINI, "1")
+}
+
+record(longin, "$(P)$(R):XINVALID")
+{
+    field(SCAN, "I/O Intr")
+    field(DTYP, "asynInt32")
+    field(VAL,  "0")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))XINVALID")
+    field(PINI, "1")
+}
+
+record(longin, "$(P)$(R):YINVALID")
+{
+    field(SCAN, "I/O Intr")
+    field(DTYP, "asynInt32")
+    field(VAL,  "0")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))YINVALID")
+    field(PINI, "1")
+}
+
+record(bo, "$(P)$(R):STREAMINGMODE")
+{
+    field(SCAN, "Passive")
+    field(DTYP, "asynInt32")
+    field(VAL,  "0")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))STREAMING_MODE")
+    field(ZNAM, "Timed samples")
+    field(ONAM, "Streamed samples")
+}
+
+
