@@ -264,7 +264,7 @@ bool elcomat3000::getToken(const char* text, size_t* pos, char* token, size_t ma
         }
     }
     token[tokenPos] = '\0';
-    printf("{%s}", token);
+    //printf("{%s}", token);
     return result;
 }
 
@@ -273,7 +273,7 @@ void elcomat3000::parseData(const char* text)
     size_t pos = 0;
     char token[200];
     char* endptr;
-    printf("Parsing: \"%s\"\n", text);
+    //printf("Parsing: \"%s\"\n", text);
     /* Get the message type */
     if(getToken(text, &pos, token, 200))
     {
@@ -317,7 +317,7 @@ void elcomat3000::parseData(const char* text)
             if(getToken(text, &pos, token, 200))
             {
                 /* Handle the status codes */
-                printf("Status = %s\n", token);
+                //printf("Status = %s\n", token);
                 if(strlen(token) >= 3)
                 {
                     if(token[2] == '1')
@@ -399,7 +399,7 @@ void elcomat3000::parseData(const char* text)
             }
         }
     }
-    printf("\n");
+    //printf("\n");
 }
 
 /*
