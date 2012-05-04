@@ -15,8 +15,6 @@
 #include "asynOctetSyncIO.h"
 #include "asynCommonSyncIO.h"
 
-static const char *driverName = "elcomat3000";
-
 /* Create the parameter name strings to be used in records INP/OUT fields to map records to specific parameters */
 #define elcomat3000_averageSize_str    "AVERAGESIZE"
 #define elcomat3000_samplePeriod_str   "SAMPLEPERIOD"
@@ -38,6 +36,11 @@ static const char *driverName = "elcomat3000";
 #define elcomat3000_go_str             "GO"
 #define elcomat3000_stop_str           "STOP"
 #define elcomat3000_streamingMode_str  "STREAMING_MODE"
+#define elcomat3000_xWaveform_str      "XWAVEFORM"
+#define elcomat3000_yWaveform_str      "YWAVEFORM"
+#define elcomat3000_time_str           "TIME"
+#define elcomat3000_timeWaveform_str   "TIMEWAVEFORM"
+
 #define NUM_PARAMS (&LAST_PARAM - &FIRST_PARAM - 1)
 
 /* String terminators */
@@ -52,9 +55,9 @@ static const char *driverName = "elcomat3000";
  */
 elcomat3000::elcomat3000(const char* portName, const char* serialPortName, int serialPortAddress) 
     : asynPortDriver(portName, 1 /*maxAddr*/, NUM_PARAMS,
-        asynInt32Mask | asynFloat64Mask | asynDrvUserMask, 
-        asynInt32Mask | asynFloat64Mask, 
-        0, /*ASYN_CANBLOCK=0, ASYN_MULTIDEVICE=0 */
+        asynInt32Mask | asynFloat64Mask | asynDrvUserMask | asynFloat64ArrayMask, 
+        asynInt32Mask | asynFloat64Mask | asynFloat64ArrayMask, 
+        ASYN_CANBLOCK, /*ASYN_CANBLOCK=1, ASYN_MULTIDEVICE=0 */
         1, /*autoConnect*/
         0, /*default priority */
         0) /*default stack size*/
@@ -81,6 +84,10 @@ elcomat3000::elcomat3000(const char* portName, const char* serialPortName, int s
     createParam(elcomat3000_go_str, asynParamInt32, &index_go);
     createParam(elcomat3000_stop_str, asynParamInt32, &index_stop);
     createParam(elcomat3000_streamingMode_str, asynParamInt32, &index_streamingMode);
+    createParam(elcomat3000_xWaveform_str, asynParamFloat64Array, &index_xWaveform);
+    createParam(elcomat3000_yWaveform_str, asynParamFloat64Array, &index_yWaveform);
+    createParam(elcomat3000_timeWaveform_str, asynParamFloat64Array, &index_timeWaveform);
+    createParam(elcomat3000_time_str, asynParamFloat64, &index_time);
    
     /* set some default values */
     setIntegerParam(index_averageSize, 10);
@@ -103,6 +110,7 @@ elcomat3000::elcomat3000(const char* portName, const char* serialPortName, int s
     setIntegerParam(index_go, 0);
     setIntegerParam(index_stop, 0);
     setIntegerParam(index_streamingMode, 0);
+    setDoubleParam(index_time, 0.0);
 
     /* Initialise averaging parameters */
     currentSumX = 0.0;
@@ -137,7 +145,8 @@ void elcomat3000::run()
     asynStatus status;
 
     /* Connect to the serial port */
-    asynStatus asynRtn = pasynOctetSyncIO->connect(serialPortName, serialPortAddress, &serialPortUser, NULL);
+    asynStatus asynRtn = pasynOctetSyncIO->connect(serialPortName,
+        serialPortAddress, &serialPortUser, NULL);
     if(asynRtn != asynSuccess) 
     {
         printf("Failed to connect to serial port=%s error=%d\n",
@@ -156,7 +165,8 @@ void elcomat3000::run()
     pasynOctetSyncIO->flush(serialPortUser);
 
     /* Read device configuration */
-    status = pasynOctetSyncIO->writeRead(serialPortUser, "d", 1, rxBuffer, 199, 3.0, &nwrite, &nread, &eomReason);
+    status = pasynOctetSyncIO->writeRead(serialPortUser, "d", 1, rxBuffer, 199,
+        3.0, &nwrite, &nread, &eomReason);
     if(status == asynSuccess)
     {
         lock();
@@ -178,8 +188,8 @@ void elcomat3000::run()
         int streamingMode;
         getIntegerParam(index_streamingMode, &streamingMode);
         /* Are we streaming? */
-        /* This is actually a bit of a yukky wait when we are not running.  There should be
-           a semaphore to wait on instead. */
+        /* This is actually a bit of a yukky wait when we are not running.
+            There should be a semaphore to wait on instead. */
         if(!running || !streamingMode)
         {
             /* Wait for the next sample */
@@ -196,18 +206,21 @@ void elcomat3000::run()
                 if(currentSamples == 0)
                 {
                     /* If this is the first sample, start the streaming mode */
-                    status = pasynOctetSyncIO->writeRead(serialPortUser, "A", 1, rxBuffer, 199, 3.0, &nwrite, &nread, &eomReason);
+                    status = pasynOctetSyncIO->writeRead(serialPortUser, "A", 1,
+                        rxBuffer, 199, 3.0, &nwrite, &nread, &eomReason);
                 }
                 else
                 {
                     /* Otherwise, just read the next message */
-                    status = pasynOctetSyncIO->read(serialPortUser, rxBuffer, 199, 3.0, &nread, &eomReason);
+                    status = pasynOctetSyncIO->read(serialPortUser, rxBuffer, 199,
+                        3.0, &nread, &eomReason);
                 }
             }
             else
             {
                 /* Trigger the next sample */
-                status = pasynOctetSyncIO->writeRead(serialPortUser, "a", 1, rxBuffer, 199, 3.0, &nwrite, &nread, &eomReason);
+                status = pasynOctetSyncIO->writeRead(serialPortUser, "a", 1,
+                    rxBuffer, 199, 3.0, &nwrite, &nread, &eomReason);
             }
             /* Process the sample */
             if(status == asynSuccess)
@@ -235,7 +248,8 @@ void elcomat3000::run()
     }
 }
 
-bool elcomat3000::getToken(const char* text, size_t* pos, char* token, size_t maxTokenLen)
+bool elcomat3000::getToken(const char* text, size_t* pos, char* token,
+    size_t maxTokenLen)
 {
     bool result = false;
     size_t tokenPos = 0;
@@ -354,6 +368,7 @@ void elcomat3000::parseData(const char* text)
                         {
                             currentSumX += x;
                             currentSumXSquared += x*x;
+                            xWaveform[currentSamples] = x;
                             xSamples++;
                             setIntegerParam(index_xSamples, xSamples);
                         }
@@ -363,11 +378,13 @@ void elcomat3000::parseData(const char* text)
                             getIntegerParam(index_xInvalid, &xInvalid);
                             xInvalid++;
                             setIntegerParam(index_xInvalid, xInvalid);
+                            xWaveform[currentSamples] = 0.0;
                         }
                         if(yValid)
                         {
                             currentSumY += y;
                             currentSumYSquared += y*y;
+                            yWaveform[currentSamples] = y;
                             ySamples++;
                             setIntegerParam(index_ySamples, ySamples);
                         }
@@ -377,7 +394,14 @@ void elcomat3000::parseData(const char* text)
                             getIntegerParam(index_yInvalid, &yInvalid);
                             yInvalid++;
                             setIntegerParam(index_yInvalid, yInvalid);
+                            yWaveform[currentSamples] = 0.0;
                         }
+                        epicsTime t = epicsTime::getCurrent();
+                        if(currentSamples == 0)
+                        {
+                            startTime = t;
+                        }
+                        timeWaveform[currentSamples] = t - startTime;
                         currentSamples++;
                         int averageSize;
                         getIntegerParam(index_averageSize, &averageSize);
@@ -392,7 +416,11 @@ void elcomat3000::parseData(const char* text)
                                 setDoubleParam(index_yStdDev, sqrt(currentSumYSquared/ySamples - 
                                           (currentSumY*currentSumY) / (ySamples*ySamples) ) );
                             }
+                            setDoubleParam(index_time, timeWaveform[currentSamples-1]);
                             setIntegerParam(index_running, 0);
+                            doCallbacksFloat64Array(xWaveform, currentSamples, index_xWaveform, 0);
+                            doCallbacksFloat64Array(yWaveform, currentSamples, index_yWaveform, 0);
+                            doCallbacksFloat64Array(timeWaveform, currentSamples, index_timeWaveform, 0);
                         }
                     }
                 }
@@ -462,6 +490,45 @@ asynStatus elcomat3000::writeInt32(asynUser *pasynUser, epicsInt32 value)
         }
     }
     return status;
+}
+
+/** Called when asyn clients call pasynFloat64->read().
+  * This function performs actions for some parameters
+  * \param[in] pasynUser pasynUser structure that encodes the reason and address.
+  * \param[out] value Value to read.
+  * \param[in] nElements Maximum number of elements to read.
+  * \param[out] nIn Number of elements read
+  */
+asynStatus elcomat3000::readFloat64Array(asynUser *pasynUser, epicsFloat64 *value,
+    size_t nElements, size_t *nIn)
+{
+    asynStatus result = asynSuccess;
+    int parameter = pasynUser->reason;
+    if(nElements < currentSamples)
+    {
+        *nIn = nElements;
+    }
+    else
+    {
+        *nIn = currentSamples;
+    }
+    if(parameter == index_xWaveform)
+    {
+        memcpy(value, xWaveform, sizeof(epicsFloat64)* (*nIn));
+    }
+    else if(parameter == index_yWaveform)
+    {
+        memcpy(value, yWaveform, sizeof(epicsFloat64)* (*nIn));
+    }
+    else if(parameter == index_timeWaveform)
+    {
+        memcpy(value, timeWaveform, sizeof(epicsFloat64)* (*nIn));
+    }
+    else
+    {
+        result = asynPortDriver::readFloat64Array(pasynUser, value, nElements, nIn);
+    }
+    return result;
 }
 
 /** Configuration command, called directly or from iocsh */

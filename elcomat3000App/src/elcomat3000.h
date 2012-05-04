@@ -15,6 +15,10 @@
 class elcomat3000 : public asynPortDriver, public epicsThreadRunable 
 {
 public:
+    /* Constants */
+    enum {WAVEFORM_SIZE=5000000};
+    
+public:
     elcomat3000(const char *portName, const char* serialPortName, int serialPortAddress);
     virtual ~elcomat3000();
 
@@ -22,6 +26,8 @@ public:
     virtual asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
     virtual asynStatus drvUserCreate(asynUser* pasynUser, const char* drvInfo,
         const char** pptypeName, size_t* psize);
+    virtual asynStatus readFloat64Array(asynUser *pasynUser, epicsFloat64 *value,
+        size_t nElements, size_t *nIn);
 
     /* These are the methods that we override from epicsThreadRunable */
     virtual void run();
@@ -41,6 +47,10 @@ protected:
     int serialPortAddress;
     epicsThread thread;
     asynUser* serialPortUser;
+    double xWaveform[WAVEFORM_SIZE];
+    double yWaveform[WAVEFORM_SIZE];
+    double timeWaveform[WAVEFORM_SIZE];
+    epicsTime startTime;
 
     /* Parameter indices */
     int FIRST_PARAM;
@@ -64,6 +74,10 @@ protected:
     int index_go;
     int index_stop;
     int index_streamingMode;
+    int index_xWaveform;
+    int index_yWaveform;
+    int index_time;
+    int index_timeWaveform;
     int LAST_PARAM;
 };
 

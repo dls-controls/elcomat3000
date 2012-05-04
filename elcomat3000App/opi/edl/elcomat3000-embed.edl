@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 202
-y 232
+x 740
+y 35
 w 482
 h 342
 font "helvetica-medium-r-14.0"
@@ -35,7 +35,7 @@ release 0
 x 0
 y 5
 w 265
-h 300
+h 330
 lineColor index 14
 fill
 fillColor index 5
@@ -48,7 +48,7 @@ major 4
 minor 5
 release 0
 x 85
-y 30
+y 25
 w 70
 h 20
 controlPv "$(P):XVALUE"
@@ -75,7 +75,7 @@ minor 1
 release 0
 x 0
 y 0
-w 56
+w 54
 h 14
 font "arial-medium-r-12.0"
 fgColor index 14
@@ -134,7 +134,7 @@ major 4
 minor 5
 release 0
 x 160
-y 30
+y 25
 w 70
 h 20
 controlPv "$(P):YVALUE"
@@ -160,7 +160,7 @@ major 4
 minor 1
 release 0
 x 115
-y 10
+y 5
 w 15
 h 20
 font "arial-bold-r-12.0"
@@ -179,7 +179,7 @@ major 4
 minor 1
 release 0
 x 185
-y 10
+y 5
 w 15
 h 20
 font "arial-bold-r-12.0"
@@ -301,7 +301,7 @@ major 4
 minor 5
 release 0
 x 85
-y 55
+y 50
 w 70
 h 20
 controlPv "$(P):XSAMPLES"
@@ -327,7 +327,7 @@ major 4
 minor 5
 release 0
 x 160
-y 55
+y 50
 w 70
 h 20
 controlPv "$(P):YSAMPLES"
@@ -353,7 +353,7 @@ major 4
 minor 5
 release 0
 x 160
-y 80
+y 75
 w 70
 h 20
 controlPv "$(P):YINVALID"
@@ -379,7 +379,7 @@ major 4
 minor 5
 release 0
 x 85
-y 80
+y 75
 w 70
 h 20
 controlPv "$(P):XINVALID"
@@ -405,7 +405,7 @@ major 4
 minor 5
 release 0
 x 85
-y 105
+y 100
 w 70
 h 20
 controlPv "$(P):XSTDDEV"
@@ -431,7 +431,7 @@ major 4
 minor 5
 release 0
 x 160
-y 105
+y 100
 w 70
 h 20
 controlPv "$(P):YSTDDEV"
@@ -457,7 +457,7 @@ major 4
 minor 1
 release 0
 x 20
-y 55
+y 50
 w 60
 h 20
 font "arial-bold-r-12.0"
@@ -476,7 +476,7 @@ major 4
 minor 1
 release 0
 x 20
-y 80
+y 75
 w 60
 h 20
 font "arial-bold-r-12.0"
@@ -495,7 +495,7 @@ major 4
 minor 1
 release 0
 x 20
-y 105
+y 100
 w 60
 h 20
 font "arial-bold-r-12.0"
@@ -514,7 +514,7 @@ major 4
 minor 1
 release 0
 x 20
-y 30
+y 25
 w 60
 h 20
 font "arial-bold-r-12.0"
@@ -590,5 +590,51 @@ topShadowColor index 1
 botShadowColor index 11
 controlPv "$(P):STREAMINGMODE"
 font "arial-bold-r-12.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 310
+w 92
+h 14
+font "arial-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Collection Time"
+}
+autoSize
+endObjectProperties
+
+# (Text Monitor)
+object activeXTextDspClass:noedit
+beginObjectProperties
+major 4
+minor 5
+release 0
+x 110
+y 305
+w 70
+h 20
+controlPv "$(P):TIME"
+font "arial-bold-r-12.0"
+fontAlign "center"
+fgColor index 15
+fgAlarm
+bgColor index 10
+limitsFromDb
+precision 4
+nullColor index 0
+showUnits
+useAlarmBorder
+newPos
+objType "monitors"
+noExecuteClipMask
 endObjectProperties
 

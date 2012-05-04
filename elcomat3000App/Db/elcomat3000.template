@@ -8,6 +8,10 @@
 #   TIMEOUT - Timeout
 #   ADDR    - Address
 
+# The number of samples to collect for the average
+#% autosave 2 VAL
+# %gdatag,template,simplePv,$(gda_name=).AVERAGESIZE,$(gda_desc=)
+# %gdatag,pv,rw,$(gda_name=).AVERAGESIZE,RECORD,$(gda_desc=)
 record(longout, "$(P)$(R):AVERAGESIZE")
 {
     field(SCAN, "Passive")
@@ -17,6 +21,9 @@ record(longout, "$(P)$(R):AVERAGESIZE")
     field(PINI, "1")
 }
 
+# The average of the collected X samples
+# %gdatag,template,simplePv,$(gda_name=).XVALUE,$(gda_desc=)
+# %gdatag,pv,ro,$(gda_name=).XVALUE,RECORD,$(gda_desc=)
 record(ai, "$(P)$(R):XVALUE")
 {
     field(SCAN, "I/O Intr")
@@ -27,6 +34,9 @@ record(ai, "$(P)$(R):XVALUE")
     field(PREC, "3")
 }
 
+# The standard deviation of the collected X samples
+# %gdatag,template,simplePv,$(gda_name=).XSTDDEV,$(gda_desc=)
+# %gdatag,pv,ro,$(gda_name=).XSTDDEV,RECORD,$(gda_desc=)
 record(ai, "$(P)$(R):XSTDDEV")
 {
     field(SCAN, "I/O Intr")
@@ -37,6 +47,10 @@ record(ai, "$(P)$(R):XSTDDEV")
     field(PREC, "3")
 }
 
+# The desired sample period when not in stream mode
+#% autosave 2 VAL
+# %gdatag,template,simplePv,$(gda_name=).SAMPLEPERIOD,$(gda_desc=)
+# %gdatag,pv,rw,$(gda_name=).SAMPLEPERIOD,RECORD,$(gda_desc=)
 record(ao, "$(P)$(R):SAMPLEPERIOD")
 {
     field(SCAN, "Passive")
@@ -47,6 +61,9 @@ record(ao, "$(P)$(R):SAMPLEPERIOD")
     field(PREC, "3")
 }
 
+# The average of the collected Y samples
+# %gdatag,template,simplePv,$(gda_name=).YVALUE,$(gda_desc=)
+# %gdatag,pv,ro,$(gda_name=).YVALUE,RECORD,$(gda_desc=)
 record(ai, "$(P)$(R):YVALUE")
 {
     field(SCAN, "I/O Intr")
@@ -57,6 +74,9 @@ record(ai, "$(P)$(R):YVALUE")
     field(PREC, "3")
 }
 
+# The standard deviation of the collected Y samples
+# %gdatag,template,simplePv,$(gda_name=).YSTDDEV,$(gda_desc=)
+# %gdatag,pv,ro,$(gda_name=).YSTDDEV,RECORD,$(gda_desc=)
 record(ai, "$(P)$(R):YSTDDEV")
 {
     field(SCAN, "I/O Intr")
@@ -67,6 +87,7 @@ record(ai, "$(P)$(R):YSTDDEV")
     field(PREC, "3")
 }
 
+# Indicates whether the autocollimator is connected
 record(bi, "$(P)$(R):CONNECTED")
 {
     field(SCAN, "I/O Intr")
@@ -77,6 +98,7 @@ record(bi, "$(P)$(R):CONNECTED")
     field(ONAM, "Connected")
 }
 
+# Indicates whether the autocollimator is running
 record(bi, "$(P)$(R):RUNNING")
 {
     field(SCAN, "I/O Intr")
@@ -87,6 +109,9 @@ record(bi, "$(P)$(R):RUNNING")
     field(ONAM, "Running")
 }
 
+# Starts the data collection
+# %gdatag,template,simpleBinary,$(gda_name=).GO,$(gda_desc=)
+# %gdatag,binary,rw,$(gda_name=).GO,RECORD,$(gda_desc=)
 record(bo, "$(P)$(R):GO")
 {
     field(SCAN, "Passive")
@@ -97,6 +122,9 @@ record(bo, "$(P)$(R):GO")
     field(ONAM, "Go")
 }
 
+# Stops the data collection
+# %gdatag,template,simpleBinary,$(gda_name=).STOP,$(gda_desc=)
+# %gdatag,binary,rw,$(gda_name=).STOP,RECORD,$(gda_desc=)
 record(bo, "$(P)$(R):STOP")
 {
     field(SCAN, "Passive")
@@ -107,6 +135,7 @@ record(bo, "$(P)$(R):STOP")
     field(ONAM, "Stop")
 }
 
+# The serial number of the autocollimator
 record(longin, "$(P)$(R):SERIALNUMBER")
 {
     field(SCAN, "I/O Intr")
@@ -116,6 +145,7 @@ record(longin, "$(P)$(R):SERIALNUMBER")
     field(PINI, "1")
 }
 
+# The calibration date of the auotcollimator
 record(longin, "$(P)$(R):DAY")
 {
     field(SCAN, "I/O Intr")
@@ -124,7 +154,6 @@ record(longin, "$(P)$(R):DAY")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))DAY")
     field(PINI, "1")
 }
-
 record(longin, "$(P)$(R):MONTH")
 {
     field(SCAN, "I/O Intr")
@@ -133,7 +162,6 @@ record(longin, "$(P)$(R):MONTH")
     field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))MONTH")
     field(PINI, "1")
 }
-
 record(longin, "$(P)$(R):YEAR")
 {
     field(SCAN, "I/O Intr")
@@ -143,6 +171,7 @@ record(longin, "$(P)$(R):YEAR")
     field(PINI, "1")
 }
 
+# The focal length of the autocollimator
 record(longin, "$(P)$(R):FOCALLENGTH")
 {
     field(SCAN, "I/O Intr")
@@ -152,6 +181,7 @@ record(longin, "$(P)$(R):FOCALLENGTH")
     field(PINI, "1")
 }
 
+# Number of valid X samples collected
 record(longin, "$(P)$(R):XSAMPLES")
 {
     field(SCAN, "I/O Intr")
@@ -161,6 +191,7 @@ record(longin, "$(P)$(R):XSAMPLES")
     field(PINI, "1")
 }
 
+# Number of valid Y samples collected
 record(longin, "$(P)$(R):YSAMPLES")
 {
     field(SCAN, "I/O Intr")
@@ -170,6 +201,7 @@ record(longin, "$(P)$(R):YSAMPLES")
     field(PINI, "1")
 }
 
+# Number of invalid X samples collected
 record(longin, "$(P)$(R):XINVALID")
 {
     field(SCAN, "I/O Intr")
@@ -179,6 +211,7 @@ record(longin, "$(P)$(R):XINVALID")
     field(PINI, "1")
 }
 
+# Number of invalid Y samples collected
 record(longin, "$(P)$(R):YINVALID")
 {
     field(SCAN, "I/O Intr")
@@ -188,6 +221,10 @@ record(longin, "$(P)$(R):YINVALID")
     field(PINI, "1")
 }
 
+# Selects 'timed' or 'streaming' mode.
+#% autosave 2 VAL
+# %gdatag,template,simpleBinary,$(gda_name=).STREAMINGMODE,$(gda_desc=)
+# %gdatag,binary,rw,$(gda_name=).STREAMINGMODE,RECORD,$(gda_desc=)
 record(bo, "$(P)$(R):STREAMINGMODE")
 {
     field(SCAN, "Passive")
@@ -198,4 +235,55 @@ record(bo, "$(P)$(R):STREAMINGMODE")
     field(ONAM, "Streamed samples")
 }
 
+# The collected X samples
+# %gdatag,template,simpleArray,$(gda_name=).XWAVEFORM,$(gda_desc=)
+# %gdatag,array,ro,$(gda_name=).XWAVEFORM,RECORD,$(gda_desc=)
+record(waveform, "$(P)$(R):XWAVEFORM")
+{
+    field(DTYP, "asynFloat64ArrayIn")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))XWAVEFORM")
+    field(FTVL, "DOUBLE")
+    field(NELM, "2500000")
+    field(SCAN, "I/O Intr")
+    field(PINI, "1")
+}
+
+# The collected Y samples
+# %gdatag,template,simpleArray,$(gda_name=).YWAVEFORM,$(gda_desc=)
+# %gdatag,array,ro,$(gda_name=).YWAVEFORM,RECORD,$(gda_desc=)
+record(waveform, "$(P)$(R):YWAVEFORM")
+{
+    field(DTYP, "asynFloat64ArrayIn")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))YWAVEFORM")
+    field(FTVL, "DOUBLE")
+    field(NELM, "2500000")
+    field(SCAN, "I/O Intr")
+    field(PINI, "1")
+}
+
+# The collected time stamps
+# %gdatag,template,simpleArray,$(gda_name=).TIMEWAVEFORM,$(gda_desc=)
+# %gdatag,array,ro,$(gda_name=).TIMEWAVEFORM,RECORD,$(gda_desc=)
+record(waveform, "$(P)$(R):TIMEWAVEFORM")
+{
+    field(DTYP, "asynFloat64ArrayIn")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))TIMEWAVEFORM")
+    field(FTVL, "DOUBLE")
+    field(NELM, "2500000")
+    field(SCAN, "I/O Intr")
+    field(PINI, "1")
+}
+
+# The collection time in seconds
+# %gdatag,template,simplePv,$(gda_name=).STARTTIME,$(gda_desc=)
+# %gdatag,pv,ro,$(gda_name=).STARTTIME,RECORD,$(gda_desc=)
+record(ai, "$(P)$(R):TIME")
+{
+    field(SCAN, "I/O Intr")
+    field(DTYP, "asynFloat64")
+    field(VAL,  "0")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))TIME")
+    field(PINI, "1")
+    field(PREC, "3")
+}
 
